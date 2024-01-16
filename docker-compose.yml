@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  conn_service:
+    container_name: cc_container
+    build:
+      context: .
+      args:
+        - NODE_ENV=local
+      dockerfile: Dockerfile
+    network_mode: "host"
+    runtime: nvidia
+    shm_size: 6g
+    volumes:
+      # - "./deepstream_python_apps:/opt/nvidia/deepstream/deepstream-6.3/sources/deepstream_python_apps"
+      - "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+      - "//var/run/docker.sock://var/run/docker.sock"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "./:/WORKSPACE"
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - ENABLE_ALERTS=TRUE
+      - PRINT_OUT=FALSE
+      - ROOT_DIR=/workspace/SP2023/
+      # - GST_DEBUG=1
+      # - GST_DEBUG_LEVEL=3
+    # restart: always
+    # command: ["deepstream_python_apps/apps/deepstream-demux-multi-in-multi-out/deepstream_demux_multi_in_multi_out.py","-i", "file:///opt/nvidia/deepstream/deepstream-5.1/workspace/1.mp4"]
+    command: ["/WORKSPACE/src/main.py"]
+    entrypoint: ["python3", "-u"]
+    
+    
+
+    
